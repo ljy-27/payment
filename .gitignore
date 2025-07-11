@@ -37,3 +37,6 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+### application-dev ###
+src/main/resources/application-dev.yml
