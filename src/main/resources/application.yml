@@ -9,3 +9,8 @@ spring:
 
   thymeleaf:
     cache: false
+
+PSP:
+  toss:
+    secretKey: ${SECRET_KEY}
+    url: https://api.tosspayments.com
