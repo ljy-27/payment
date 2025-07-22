@@ -10,7 +10,7 @@ import spring.payment.common.WebAdapter
 class PaymentController {
 
     @GetMapping("/success")
-    fun sucessPage(): Mono<String> {
+    fun successPage(): Mono<String> {
         return Mono.just("success")
     }
 
