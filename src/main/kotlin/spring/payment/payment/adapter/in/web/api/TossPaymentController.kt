@@ -11,24 +11,26 @@ import spring.payment.common.WebAdapter
 import spring.payment.payment.adapter.`in`.web.request.TossPaymentConfirmRequest
 import spring.payment.payment.adapter.`in`.web.response.ApiResponse
 import spring.payment.payment.adapter.out.web.executor.TossPaymentExecutor
+import spring.payment.payment.application.port.`in`.PaymentConfirmCommand
+import spring.payment.payment.application.port.`in`.PaymentConfirmUseCase
+import spring.payment.payment.domain.PaymentConfrimationResult
 
 @WebAdapter
 @RestController
 @RequestMapping("/v1/toss")
 class TossPaymentController (
-    private val tossPaymentExecutor: TossPaymentExecutor
+    private val paymentConfirmUseCase: PaymentConfirmUseCase
 ){
 
     @PostMapping("/confirm")
-    fun confirm(@RequestBody request: TossPaymentConfirmRequest): Mono<ResponseEntity<ApiResponse<String>>> {
-        return tossPaymentExecutor.execute(
+    fun confirm(@RequestBody request: TossPaymentConfirmRequest): Mono<ResponseEntity<ApiResponse<PaymentConfrimationResult>>> {
+        val command = PaymentConfirmCommand(
             paymentKey = request.paymentKey,
             orderId = request.orderId,
-            amount = request.amount.toString()
-        ).map {
-            ResponseEntity.ok().body(
-                ApiResponse.with(HttpStatus.OK, "ok", it)
-            )
-        }
+            amount = request.amount
+        )
+
+        return paymentConfirmUseCase.confirm(command)
+            .map { ResponseEntity.ok().body(ApiResponse.with(HttpStatus.OK,"", it)) }
     }
 }
